@@ -12,12 +12,10 @@ import javax.swing.JFrame;
 public class MenuManager {
 
   private final JFrame frame;
-  private final UI ui;
   private final MazeGame game;
 
-  public MenuManager(JFrame frame, UI ui, MazeGame game) {
+  public MenuManager(JFrame frame, MazeGame game) {
     this.frame = frame;
-    this.ui = ui;
     this.game = game;
   }
 

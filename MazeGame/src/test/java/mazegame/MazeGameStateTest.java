@@ -15,13 +15,11 @@ import org.junit.jupiter.api.Test;
 class MazeGameStateTest {
 
   private MazeGame game;
-  private UI ui;
 
   @BeforeEach
   void setUp() {
     assumeFalse(GraphicsEnvironment.isHeadless(), "Skipping — requires a graphical display");
-    ui = new UI(650);
-    game = new MazeGame(650, 650, ui, 10);
+    game = new MazeGame(650, 650, 10);
   }
 
   @Test

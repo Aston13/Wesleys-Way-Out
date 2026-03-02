@@ -36,7 +36,6 @@ public final class TouchDpad {
   private static final int PAUSE_MARGIN = 14;
 
   private static final Color BG = new Color(0, 0, 0, 80);
-  private static final Color BG_PRESSED = new Color(196, 149, 106, 100);
   private static final Color ARROW_COLOR = new Color(240, 236, 232, 180);
   private static final Color ARROW_PRESSED = new Color(240, 236, 232, 240);
   private static final Color BORDER = new Color(255, 255, 255, 40);

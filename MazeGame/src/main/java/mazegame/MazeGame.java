@@ -38,7 +38,6 @@ public class MazeGame extends JFrame implements GameLoop.Callbacks, InputHandler
   private final GamePanel gameView = new GamePanel();
   private final int windowWidth;
   private final int windowHeight;
-  private final UI ui;
   private final AssetManager assetManager;
   private final GameSettings settings;
   private final AudioManager audioManager;
@@ -83,13 +82,11 @@ public class MazeGame extends JFrame implements GameLoop.Callbacks, InputHandler
    *
    * @param windowHeight the window height in pixels
    * @param windowWidth the window width in pixels
-   * @param ui the UI factory for menu components
    * @param rowColAmount the initial maze grid size
    */
-  public MazeGame(int windowHeight, int windowWidth, UI ui, int rowColAmount) {
+  public MazeGame(int windowHeight, int windowWidth, int rowColAmount) {
     this.windowWidth = windowWidth;
     this.windowHeight = windowHeight;
-    this.ui = ui;
     if (rowColAmount % 2 == 0) {
       rowColAmount += 1;
     }
@@ -104,7 +101,7 @@ public class MazeGame extends JFrame implements GameLoop.Callbacks, InputHandler
     this.audioManager = new AudioManager();
     audioManager.setMusicMuted(settings.isMusicMuted());
     audioManager.setMusicVolume(settings.getMusicVolume());
-    this.menuManager = new MenuManager(this, ui, this);
+    this.menuManager = new MenuManager(this, this);
     this.inputHandler = new InputHandler(this);
     // Touch controls disabled until mobile performance & viewport issues are resolved.
     // Original: "true".equals(System.getProperty("cheerpj.browser"))
