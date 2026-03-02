@@ -46,6 +46,7 @@ cd MazeGame
 | `gradlew jar` | Build the JAR (output: `build/libs/MazeGame-<version>.jar`) |
 | `gradlew browserJar` | Build Java-8 JAR for CheerpJ browser play |
 | `gradlew runBrowser` | Build browser JAR, copy to `docs/`, and start local HTTP server |
+| `gradlew jpackage` | Create a native app image with bundled JRE (no Java needed to run) |
 | `gradlew clean` | Delete all build artifacts |
 
 ## Running the JAR Directly
@@ -145,6 +146,21 @@ cd MazeGame
 # Launch the desktop game
 ./gradlew run
 ```
+
+### Native Installer (jpackage)
+
+Create a standalone desktop app that bundles a private JRE — recipients **don't need Java installed**.
+
+```bash
+# Build an app image (folder with .exe / .app)
+./gradlew jpackage
+# Output: build/installers/WesleysWayOut/
+
+# Build a Windows MSI installer (requires WiX Toolset 3.x)
+./gradlew jpackage -PinstallerType=msi
+```
+
+The task recompiles sources automatically, so the output always reflects the latest code.
 
 ### Browser Build (CheerpJ)
 

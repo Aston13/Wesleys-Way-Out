@@ -45,6 +45,14 @@
             "windows": {
                 "command": ".\\gradlew.bat browserJar; Copy-Item build\\libs\\MazeGame-browser-1.0.0.jar ..\\docs\\MazeGame.jar -Force"
             }
+        },
+        {
+            "label": "Build Native Installer",
+            "type": "shell",
+            "command": "./gradlew jpackage",
+            "options": { "cwd": "${workspaceFolder}/MazeGame" },
+            "problemMatcher": ["$javac"],
+            "detail": "Create standalone .exe with bundled JRE (no Java needed)"
         }
     ]
 }
