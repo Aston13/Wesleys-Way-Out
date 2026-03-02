@@ -108,6 +108,71 @@ tasks.register('browserJar', Jar) {
     destinationDirectory = layout.buildDirectory.dir('libs')
 }
 
+// --- Native installer (jpackage) ---
+// Creates a platform-specific installer that bundles a private JRE.
+// Recipients do NOT need Java installed.
+// Usage:
+//   ./gradlew jpackage                          → app-image (folder with .exe / .app)
+//   ./gradlew jpackage -PinstallerType=msi      → MSI installer  (Windows, needs WiX 3)
+//   ./gradlew jpackage -PinstallerType=exe      → EXE installer  (Windows, needs WiX 3)
+//   ./gradlew jpackage -PinstallerType=dmg      → DMG disk image (macOS)
+//   ./gradlew jpackage -PinstallerType=deb      → DEB package    (Linux)
+tasks.register('jpackage') {
+    description = 'Create a native installer that bundles a private JRE'
+    dependsOn 'installDist'
+    doLast {
+        // Resolve jpackage from the toolchain JDK
+        def javaInstallDir = javaToolchains.launcherFor {
+            languageVersion = JavaLanguageVersion.of(21)
+        }.get().metadata.installationPath.asFile
+        def isWindows = System.getProperty('os.name').toLowerCase().contains('win')
+        def jpackageExec = new File(javaInstallDir, "bin/jpackage${isWindows ? '.exe' : ''}")
+
+        def installLib = layout.buildDirectory.dir('install/MazeGame/lib').get().asFile
+        def outputDir  = layout.buildDirectory.dir('installers').get().asFile
+
+        // Clean previous output so jpackage doesn't fail on existing directory
+        def prevOutput = new File(outputDir, 'WesleysWayOut')
+        if (prevOutput.exists()) {
+            prevOutput.deleteDir()
+        }
+        outputDir.mkdirs()
+
+        def type = project.findProperty('installerType') ?: 'app-image'
+
+        // Use the favicon.ico from docs/ as the Windows icon
+        def iconFile = file("${rootProject.projectDir}/docs/favicon.ico")
+
+        def args = [
+            jpackageExec.path,
+            '--type', type,
+            '--name', 'WesleysWayOut',
+            '--app-version', project.version.toString(),
+            '--input', installLib.path,
+            '--main-jar', "MazeGame-${project.version}.jar".toString(),
+            '--main-class', 'mazegame.Start',
+            '--dest', outputDir.path,
+            '--description', 'Wesley\'s Way Out - a maze puzzle game',
+            '--vendor', 'Wesley'
+        ]
+        if (isWindows && iconFile.exists()) {
+            args.add('--icon')
+            args.add(iconFile.path)
+        }
+
+        def pb = new ProcessBuilder(args.collect { it.toString() })
+        pb.inheritIO()
+        def process = pb.start()
+        def exitCode = process.waitFor()
+        if (exitCode != 0) {
+            throw new GradleException("jpackage failed with exit code ${exitCode}")
+        }
+
+        println ""
+        println "Installer created in: ${outputDir.path}"
+    }
+}
+
 // --- Local browser testing ---
 // Builds the browser JAR, copies it to docs/, and starts a local HTTP server.
 // Usage: ./gradlew runBrowser
