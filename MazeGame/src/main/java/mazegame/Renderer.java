@@ -223,7 +223,6 @@ public class Renderer {
   private TilePassage boneTile;
   private boolean boneCollectedThisRun;
   private final boolean boneAlreadyCollected;
-  private final MazeGame game;
   private BufferedImage boneSprite;
 
   // Bone-collection visual feedback
@@ -266,7 +265,6 @@ public class Renderer {
     this.assetManager = assetManager;
     this.audioManager = audioManager;
     this.skinPrefix = settings.getSpritePrefix();
-    this.game = game;
     this.boneAlreadyCollected = boneAlreadyCollected;
 
     screenWidthHalf = screenWidth / 2;

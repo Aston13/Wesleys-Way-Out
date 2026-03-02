@@ -14,9 +14,9 @@ public class Start {
    *
    * @param args command-line arguments (unused)
    */
+  @SuppressWarnings("deprecation")
   public static void main(String[] args) {
-    UI ui = new UI(WINDOW_SIZE);
-    MazeGame game = new MazeGame(WINDOW_SIZE, WINDOW_SIZE, ui, INITIAL_GRID_SIZE);
+    MazeGame game = new MazeGame(WINDOW_SIZE, WINDOW_SIZE, INITIAL_GRID_SIZE);
     // Apply saved language preference
     Messages.setLocale(new java.util.Locale(game.getSettings().getLanguage()));
     javax.swing.SwingUtilities.invokeLater(game::runMenu);

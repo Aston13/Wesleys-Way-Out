@@ -41,7 +41,6 @@ public class ResultOverlayPanel extends JPanel {
   private final String message;
   private String subtitle;
   private final List<MainMenuPanel.MenuButton> buttons = new ArrayList<MainMenuPanel.MenuButton>();
-  private final AudioManager audioManager;
   private final double[] particleX = new double[PARTICLE_COUNT];
   private final double[] particleY = new double[PARTICLE_COUNT];
   private final double[] particleSpeed = new double[PARTICLE_COUNT];
@@ -53,7 +52,6 @@ public class ResultOverlayPanel extends JPanel {
 
   public ResultOverlayPanel(String message, AudioManager audioManager) {
     this.message = message;
-    this.audioManager = audioManager;
     setOpaque(true);
     setBackground(BG_TOP);
 

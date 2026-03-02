@@ -399,6 +399,7 @@ public class SettingsPanel extends JPanel {
     }
   }
 
+  @SuppressWarnings("deprecation")
   private void handleClick(int mx, int my) {
     if (isOverMuteToggle(mx, my)) {
       audioManager.play(AudioManager.Sound.BUTTON_CLICK);
@@ -428,7 +429,7 @@ public class SettingsPanel extends JPanel {
       }
       String next = LANG_CODES[(idx + 1) % LANG_CODES.length];
       settings.setLanguage(next);
-      Messages.setLocale(new java.util.Locale(next));
+      Messages.setLocale(new java.util.Locale(next)); // NOSONAR — Locale.of() requires Java 19+
       repaint();
       return;
     }

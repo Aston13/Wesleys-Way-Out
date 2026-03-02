@@ -32,7 +32,6 @@ public class AssetManager {
   private static final int DOG_NORTH_FRAME_COUNT = 6;
   private static final int DOG_SOUTH_FRAME_COUNT = 6;
   private static final int GRASS_VARIANT_COUNT = 4;
-  private static final int WALL_COMBINATIONS = 16;
   private static final int ANIMATION_TICK_MS = 100;
 
   private final HashMap<String, BufferedImage> preloadedImages = new HashMap<>();
