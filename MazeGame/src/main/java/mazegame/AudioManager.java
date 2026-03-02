@@ -54,6 +54,7 @@ public class AudioManager {
   private float musicVolume = 0.5f; // 0.0 – 1.0
   private boolean audioAvailable = true;
   private Clip musicClip;
+  private String currentMusicPath;
 
   /** Creates a new AudioManager and pre-generates all sound effect samples. */
   public AudioManager() {
@@ -176,13 +177,21 @@ public class AudioManager {
       musicClip.close();
       musicClip = null;
     }
+    currentMusicPath = null;
   }
 
   /**
    * Loads an audio file from the classpath, opens a Clip, and loops it continuously. The SPI
    * providers (mp3spi, vorbisspi) handle MP3/OGG decoding transparently.
+   *
+   * <p>If the requested track is already playing, the call is a no-op so that navigating between
+   * menu screens does not restart the music.
    */
   private void playMusic(String resourcePath) {
+    // Skip if the same track is already playing
+    if (resourcePath.equals(currentMusicPath) && musicClip != null && musicClip.isRunning()) {
+      return;
+    }
     stopMusic();
     if (!audioAvailable || musicMuted) return;
 
@@ -215,6 +224,7 @@ public class AudioManager {
                 Clip clip = AudioSystem.getClip();
                 clip.open(decodedStream);
                 musicClip = clip;
+                currentMusicPath = resourcePath;
                 applyMusicVolume();
                 clip.loop(Clip.LOOP_CONTINUOUSLY);
               } catch (Exception e) {

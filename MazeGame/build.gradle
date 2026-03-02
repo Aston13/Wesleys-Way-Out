@@ -165,7 +165,7 @@ tasks.register('jpackage') {
         def process = pb.start()
         def exitCode = process.waitFor()
         if (exitCode != 0) {
-            throw new GradleException("jpackage failed with exit code ${exitCode}")
+            throw new org.gradle.api.GradleException("jpackage failed with exit code ${exitCode}")
         }
 
         println ""

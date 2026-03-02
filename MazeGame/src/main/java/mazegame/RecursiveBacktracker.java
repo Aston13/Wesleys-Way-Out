@@ -168,69 +168,60 @@ public class RecursiveBacktracker extends Tilemap {
     return exitTileSet;
   }
 
-  public boolean setExitPath(int cX, int cY) {
+  /**
+   * Iteratively finds the exit placement by exploring all passages from the starting point,
+   * tracking the furthest reachable cell. Replaces the original recursive implementation to avoid
+   * {@code StackOverflowError} on large or deeply-branching mazes.
+   */
+  public void setExitPath(int startRow, int startCol) {
     long pathCount = super.getPassageCount(exitTileSet);
+    int cX = startRow;
+    int cY = startCol;
 
-    if (visitedTiles.size() > biggestStack) {
-      biggestStack = visitedTiles.size();
+    outer:
+    while (true) {
+      if (visitedTiles.size() > biggestStack) {
+        biggestStack = visitedTiles.size();
+        TilePassage e = (TilePassage) visitedTiles.peek();
+        furthestReached = new TileExit(e.getSize(), e.getMinX(), e.getMinY());
+        furthestReached.setRowNo(e.getRowNo());
+        furthestReached.setColNo(e.getColNo());
+      }
 
-      TilePassage e = (TilePassage) visitedTiles.peek();
-      furthestReached = new TileExit(e.getSize(), e.getMinX(), e.getMinY());
-      furthestReached.setRowNo(e.getRowNo());
-      furthestReached.setColNo(e.getColNo());
-    }
+      if (exitPathLength > pathCount / 2) {
+        visitedTiles.push(furthestReached);
+        exitTileSet[furthestReached.getRowNo()][furthestReached.getColNo()] = furthestReached;
+        visitedTiles.clear();
+        return;
+      }
 
-    if (exitPathLength > pathCount / 2) {
-      visitedTiles.push(furthestReached);
-      exitTileSet[furthestReached.getRowNo()][furthestReached.getColNo()] = furthestReached;
-      visitedTiles.clear();
-      return true;
-    }
+      shuffleDirection(directions);
 
-    shuffleDirection(directions);
-
-    for (int i = 0; i < directions.length; i++) {
-      int direction = directions[i];
-
-      // Checks if the cell in direction[i] is a path cell.
-      if (checkPath(direction, cX, cY)) {
-        if (direction == 1) {
-          // North
-          cX = cX - 1;
-          setExitPath(cX, cY);
-          break;
-        } else if (direction == 2) {
-          // East
-          cY = cY + 1;
-          setExitPath(cX, cY);
-          break;
-        } else if (direction == 3) {
-          // South
-          cX = cX + 1;
-          setExitPath(cX, cY);
-          break;
-        } else if (direction == 4) {
-          // West
-          cY = cY - 1;
-          setExitPath(cX, cY);
-          break;
+      for (int i = 0; i < directions.length; i++) {
+        int direction = directions[i];
+        if (checkPath(direction, cX, cY)) {
+          if (direction == 1) {
+            cX = cX - 1;
+          } else if (direction == 2) {
+            cY = cY + 1;
+          } else if (direction == 3) {
+            cX = cX + 1;
+          } else if (direction == 4) {
+            cY = cY - 1;
+          }
+          continue outer;
         }
       }
 
-      if (i == directions.length - 1) {
-        Tile t;
-
-        if (visitedTiles.size() == 1) {
-          t = visitedTiles.peek();
-        } else {
-          t = visitedTiles.pop();
-        }
-
-        TilePassage tp = (TilePassage) t;
-        setExitPath(tp.getRowNo(), tp.getColNo());
+      // Dead end — backtrack
+      if (visitedTiles.size() <= 1) {
+        return; // exhausted all paths
       }
+      Tile t = visitedTiles.pop();
+      TilePassage tp = (TilePassage) t;
+      cX = tp.getRowNo();
+      cY = tp.getColNo();
     }
-    return false;
   }
 
   public boolean checkPath(int dir, int cX, int cY) {

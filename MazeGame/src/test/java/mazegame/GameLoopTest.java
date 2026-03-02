@@ -13,25 +13,15 @@ class GameLoopTest {
   private static class StubCallbacks implements GameLoop.Callbacks {
     volatile boolean gameInProgress = true;
     volatile boolean paused = false;
-    volatile int updateCount;
-    volatile int renderCount;
-    volatile int animCount;
-    volatile int pauseFrameCount;
 
     @Override
-    public void onUpdate() {
-      updateCount++;
-    }
+    public void onUpdate() {}
 
     @Override
-    public void onRender() {
-      renderCount++;
-    }
+    public void onRender() {}
 
     @Override
-    public void onAnimationTick() {
-      animCount++;
-    }
+    public void onAnimationTick() {}
 
     @Override
     public boolean isGameInProgress() {
@@ -45,7 +35,6 @@ class GameLoopTest {
 
     @Override
     public boolean handlePauseFrame() {
-      pauseFrameCount++;
       return false;
     }
   }
