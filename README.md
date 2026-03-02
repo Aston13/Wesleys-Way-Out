@@ -1,5 +1,7 @@
 # Wesley's Way Out
 
+<img width="500" height="500" alt="wesley-pixel" src="https://github.com/user-attachments/assets/13775c56-f662-4f57-90a5-334c4ac140c8" />
+
 A Java maze game built with Swing/AWT where you guide Wesley the dog through procedurally generated mazes, collecting keys to unlock the exit before time runs out.
 
 **[▶ Play in Browser](https://Aston13.github.io/Wesleys-Way-Out/)** — no download or Java install required (powered by CheerpJ)
